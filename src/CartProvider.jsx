@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 
@@ -22,6 +22,19 @@ const CartProvider = ({ children }) => {
       setCartItem([...cartItem, { ...item, qty: 1 }]);
     }
   };
+
+  useEffect(() => {
+    setCartItem(JSON.parse(localStorage.getItem("cart")));
+    setItemsCount(Number(localStorage.getItem("count")));
+  }, []);
+
+  useEffect(() => localStorage.setItem("cart", JSON.stringify(cartItem)), [
+    cartItem
+  ]);
+
+  useEffect(() => localStorage.setItem("count", JSON.stringify(itemsCount)), [
+    itemsCount
+  ]);
 
   const removeItems = (item) => {
     const productExist = cartItem.find((product) => product.id === item.id);
